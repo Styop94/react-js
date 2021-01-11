@@ -1,15 +1,17 @@
 import React, {Component} from 'react';
 
 class Description extends Component{
-    constructor () {
-        super()
-        
+    constructor (props) {
+        super(props);
+        this.state = {
+            description: props.description,
+        }
 
     }
     render () {
         return(
             <span>
-                {this.props.value}
+                {this.state.description}
             </span>
         )
     }
