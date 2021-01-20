@@ -26,11 +26,11 @@ class ToDo extends Component {
         //     tasks: [...this.state.tasks, inputValue],
         // })
 
-        const newTask = {
-            id : "wdfsf",
-            title: inputValue,
-        };
-        const tasks = [...this.state.tasks, newTask];
+        // const newTask = {
+        //     id : "wdfsf",
+        //     title: inputValue,
+        // };
+        const tasks = [...this.state.tasks, inputValue];
     
     this.setState({
         tasks,
