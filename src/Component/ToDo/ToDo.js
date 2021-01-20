@@ -48,7 +48,7 @@ render() {
     // let text = tasks.map((item, index) => {
     //     return <li className={`${index === 2 ? styles.selected : ""} ${styles.task}`} key={index}>{item}</li>
     // })
-    const taskComponents = [];
+    // const taskComponents = [];
     const taskComponents = tasks.map((task, index) => {
         const classes = [styles.task];
         if (index === 2) {
