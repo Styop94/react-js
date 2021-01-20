@@ -1,12 +1,8 @@
-import './App.css';
-import Footer from './footer';
-// import Header from './header';]
-import Aside from './aside';
-import User from './user';
-import Counter from './counter';
-import Product from './homework-7/Product';
-import changes from './homework-7/Product';
-// import ToDo from './Component/ToDo';
+// import { Button } from 'bootstrap';
+import ToDo from './Component/ToDo/ToDo';
+import Conditional from './Conditional';
+import Product from './homework-7-8/Product/Product';
+
 
 const fruits = [
   {
@@ -39,25 +35,18 @@ const fruits = [
 
 function App() {
   const list = fruits.map((fruits, index) => {
-    return <li key = {index}>
+    return <li key = {index}> 
       <Product icon={fruits.icon} name={fruits.name} price={fruits.price} desc={fruits.desc} />
-      
-    </li>
+    </li> 
   })
-  return (
-    <div className="App">
-      {/* <Aside />
-      <Footer /> 
-      // <User name="Alex" age={25}/>
-      // <User name="Filip" age={35}/>
-      // <User name="John" age={28}/>
-      // <User surname="Jangchyan"/>
-      <Counter  defaultValue = {26}/>  
-       <Product name="Name: Banan" price="570AMD" description="Made in China" />*/}
-      <ol>{list}</ol>
 
+  return (
+    <div>
+    <ToDo/>
+    <Conditional />
+      <ol>{list}</ol>
     </div>
-  );
+  )
 }
 
 export default App;
