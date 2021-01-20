@@ -21,44 +21,55 @@ class ToDo extends Component {
         if (!inputValue) {
             return;
         }
-        this.setState({
-            inputValue: "",
-            tasks: [...this.state.tasks, inputValue],
-        })
-    }
+        // this.setState({
+        //     inputValue: "",
+        //     tasks: [...this.state.tasks, inputValue],
+        // })
+
+        const newTask = {
+            id : "wdfsf",
+            title: inputValue,
+        };
+        const tasks = [...this.state.tasks, newTask];
     
+    this.setState({
+        tasks,
+        inputValue: '',
+    })
+}
 
-    render() {
-        const { tasks } = this.state;
+render() {
+    const { tasks } = this.state;
 
-        // let text = tasks.map((item, index) => {
-        //     return <li className={index === 2 ? styles.selected : null} key={index}>{item}</li>
-        // })
+    // let text = tasks.map((item, index) => {
+    //     return <li className={index === 2 ? styles.selected : null} key={index}>{item}</li>
+    // })
 
-        // let text = tasks.map((item, index) => {
-        //     return <li className={`${index === 2 ? styles.selected : ""} ${styles.task}`} key={index}>{item}</li>
-        // })
-        const taskComponents = tasks.map((task, index) => {
-            const classes = [styles.task];
-            if(index === 2) {
-                classes.push(styles.selected);
-            }
-            return <li key={index} className={classes.join(' ')}>{task}</li>
-        })
+    // let text = tasks.map((item, index) => {
+    //     return <li className={`${index === 2 ? styles.selected : ""} ${styles.task}`} key={index}>{item}</li>
+    // })
+    const taskComponents = [];
+    const taskComponents = tasks.map((task, index) => {
+        const classes = [styles.task];
+        if (index === 2) {
+            classes.push(styles.selected);
+        }
+        return <li key={index} className={classes.join(' ')}>{task}</li>
+    })
 
 
-        return (
-            <div>
-                <h2>Todo List</h2>
-                <input value={this.state.inputValue} onChange={this.handeleChange} />
-                <button onClick={this.clearText} >Click here</button>
-                <ol>
-                    {taskComponents}
-                </ol>
+    return (
+        <div>
+            <h2>Todo List</h2>
+            <input value={this.state.inputValue} onChange={this.handeleChange} />
+            <button onClick={this.clearText} >Click here</button>
+            <ol>
+                {taskComponents}
+            </ol>
 
-            </div>
-        )
-    }
+        </div>
+    )
+}
 }
 
 export default ToDo;
