@@ -1,5 +1,7 @@
 import { Component } from "react";
-import styles from './Todo.module.css';
+import idGenerator from './helpers/idGenerator';
+// import styles from './Todo.module.css';  
+import { Card, Button, InputGroup, FormControl, Col, Container, Row } from "react-bootstrap";
 
 class ToDo extends Component {
     constructor() {
@@ -21,55 +23,59 @@ class ToDo extends Component {
         if (!inputValue) {
             return;
         }
-        // this.setState({
-        //     inputValue: "",
-        //     tasks: [...this.state.tasks, inputValue],
-        // })
 
-        // const newTask = {
-        //     id : "wdfsf",
-        //     title: inputValue,
-        // };
-        const tasks = [...this.state.tasks, inputValue];
-    
-    this.setState({
-        tasks,
-        inputValue: '',
-    })
-}
 
-render() {
-    const { tasks } = this.state;
-
-    // let text = tasks.map((item, index) => {
-    //     return <li className={index === 2 ? styles.selected : null} key={index}>{item}</li>
-    // })
-
-    // let text = tasks.map((item, index) => {
-    //     return <li className={`${index === 2 ? styles.selected : ""} ${styles.task}`} key={index}>{item}</li>
-    // })
-    // const taskComponents = [];
-    const taskComponents = tasks.map((task, index) => {
-        const classes = [styles.task];
-        if (index === 2) {
-            classes.push(styles.selected);
+        const newTask = {
+            id: idGenerator(),
+            title: inputValue,
         }
-        return <li key={index} className={classes.join(' ')}>{task}</li>
-    })
+        const tasks = [...this.state.tasks, newTask];
 
+        this.setState({
+            tasks,
+            inputValue: '',
+        })
+    }
+    delTask = (taskId) => {
+        let fil = this.state.tasks.filter((filterTask) => {
+            return taskId !== filterTask.id
+        });
+        this.setState({ tasks: fil });
+    }
 
-    return (
-        <div>
-            <h2>Todo List</h2>
-            <input value={this.state.inputValue} onChange={this.handeleChange} />
-            <button onClick={this.clearText} >Click here</button>
-            <ol>
-                {taskComponents}
-            </ol>
-
-        </div>
-    )
-}
+    render() {
+        const idGen = this.state.tasks.map((element) => {
+            return (
+                <Col key={element.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>{element.title}</Card.Title>
+                            <Card.Text></Card.Text>
+                            <Button variant="primary" onClick={() => { this.delTask(element.id) }}>DeL</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            )
+        })
+        return (
+            <div>
+                <Container>
+                <Row className="justify-content-center">
+                    <h2>Todo List</h2>
+                    <InputGroup className="mb-3" >
+                        <FormControl maxLength="10" placeholder="" value={this.state.inputValue} onChange={this.handeleChange} />
+                        <InputGroup.Append>
+                            <Button variant="outline-secondary" onClick={this.clearText}>Click here</Button>
+                        </InputGroup.Append>
+                    </InputGroup>
+                    </Row>
+                    <Row>
+                        {idGen}
+                    </Row>
+                </Container>
+            </div>
+        )
+    }
 }
 
 export default ToDo;
