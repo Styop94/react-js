@@ -4,11 +4,10 @@ import ToDo from './Component/ToDo/ToDo';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-
 function App() {
   return (
     <div className="App">
-      <ToDo/>
+      <ToDo />
     </div>
   );
 }

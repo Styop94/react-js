@@ -1,13 +1,15 @@
 import { Component } from "react";
 import idGenerator from './helpers/idGenerator';
 // import styles from './Todo.module.css';  
-import { Card, Button, InputGroup, FormControl, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import Task from './Task/Task';
+import NewTask from './NewTask/NewTask';
 
 class ToDo extends Component {
     constructor() {
         super();
         this.state = {
-            inputValue: '',
+            inputValue: "",
             tasks: [],
             selecktedTask: new Set(),
             // checked: false,
@@ -17,15 +19,14 @@ class ToDo extends Component {
     handeleChange = (event) => {
         this.setState({
             inputValue: event.target.value,
-
         })
     }
-    clearText = () => {
+
+    AddText = () => {
         const inputValue = this.state.inputValue.trim();
         if (!inputValue) {
             return;
         }
-
 
         const newElement = {
             id: idGenerator(),
@@ -88,39 +89,36 @@ class ToDo extends Component {
     }
 
     hendelKeyDown = (event) => {
+
         if (event.key === "Enter") {
-            this.clearText();
+            this.AddText();
 
         }
     }
 
-    allChecked = (element) => {
-      
-        // const {selecktedTask} = this.state;
-        // if(selecktedTask.has(element)) {
-        //     this.setState ({
-        //         checked : true,
-        //     })
-        // }
-        // else {
-        //     this.setState ({
-        //         checked : false,
-        //     })
-        // }
-    }
+    // allChecked = (element) => {
+
+    //     const {selecktedTask} = this.state;
+    //     if(selecktedTask.has(element)) {
+    //         this.setState ({
+    //             checked : true,
+    //         })
+    //     }
+    //     else {
+    //         this.setState ({
+    //             checked : false,
+    //         })
+    //     }
+    // }
 
     render() {
         const idGen = this.state.tasks.map((element) => {
-            return (
+            return ( 
                 <Col key={element.id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                    <Card>
-                        <Card.Body>
-                            <input type="checkbox" onClick= {() => {this.allChecked(element.id) }} checked={this.state.checked} onChange={() => { this.toggleTask(element.id) }}  />
-                            <Card.Title>{element.title}</Card.Title>
-                            <Card.Text></Card.Text>
-                            <Button variant="danger" disabled={!!this.state.selecktedTask.size} onClick={() => { this.delTask(element.id) }}>DeL</Button>
-                        </Card.Body>
-                    </Card>
+                    <Task data={element}
+                        onToggle={this.toggleTask}
+                        disabled={!!this.state.selecktedTask.size}
+                        delTaskProps={this.delTask} />
                 </Col>
             )
         })
@@ -131,16 +129,17 @@ class ToDo extends Component {
                     <Row className="justify-content-center">
                         <h2>Todo List</h2>
                         <Col>
-                            <InputGroup className="mb-3" >
-                                <FormControl maxLength="10" placeholder="" disabled={!!this.state.selecktedTask.size}
-                                    value={this.state.inputValue} onChange={this.handeleChange} onKeyDown={this.hendelKeyDown} />
-                                <InputGroup.Append>
-                                    <Button variant="outline-secondary" disabled={!this.state.inputValue} onClick={this.clearText}>Click here</Button>
-                                </InputGroup.Append>
-                            </InputGroup>
+                            <NewTask
+                                disabledProps={this.state.selecktedTask.size}
+                                valueProps={this.state.inputValue}
+                                disabledBtn={this.state.selecktedTask.size}
+                                onChangeProps={this.handeleChange}
+                                onKeyDownProps={this.hendelKeyDown}
+                                AddTextProps={this.AddText}
+                            />
                         </Col>
                     </Row>
-                    <Row className="justify-content-center">    
+                    <Row className="justify-content-center">
                         <Button variant="danger" disabled={!this.state.selecktedTask.size} onClick={this.removeSelekted}>DeLete Seleckted</Button>
                              &nbsp;
                             <Button variant="danger" onClick={this.allChecked}>All Checked</Button>
