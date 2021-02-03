@@ -25,28 +25,20 @@ class NewTask extends Component {
         }
 
         if (event.key === "Enter") {
-            const { title, description } = this.state;
-            const newTask = {
-                id: idGenerator(),
-                title,
-                description,
-            };
-            this.props.onAdd(newTask);
-            this.setState({
-                title: '',
-                description: ''
-            });
+            this.helperObject()
         }
     };
 
     handelSubmit = () => {
-        const title = this.state.title.trim();
-        const description = this.state.description.trim();
-
-        if (!title) {
+        if (!this.state.title) {
             return;
         }
-
+        this.helperObject()
+    };
+    
+    helperObject = () => {
+        const title = this.state.title.trim();
+        const description = this.state.description.trim();
         const newTask = {
             id: idGenerator(),
             title,
@@ -58,7 +50,7 @@ class NewTask extends Component {
             title: '',
             description: ''
         });
-    };
+    }
 
     render() {
         const { title } = this.state;
