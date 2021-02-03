@@ -108,8 +108,8 @@ class ToDo extends Component {
                         >
                             DeLete Seleckted
                           </Button>
-                             &nbsp;
-                        <Button variant="danger" onClick={this.allChecked}>All Checked</Button>
+                         {/*    &nbsp;
+                         <Button variant="danger" onClick={this.allChecked}>All Checked</Button> */}
                     </Row>
                     <br />
                     <Row>
