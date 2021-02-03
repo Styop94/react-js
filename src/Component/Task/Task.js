@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import styles from './taskStyles.module.css';
+import PropTypes from 'prop-types';
 
 class Task extends Component {
+
+
 
     state = {
         selected: false,
@@ -35,6 +38,16 @@ class Task extends Component {
             </Card>
         )
     }
+
+
+}
+
+
+Task.propTypes = {
+    data: PropTypes.object.isRequired,
+    onToggle: PropTypes.func.isRequired,
+    delTaskProps: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired,
 }
 
 export default Task;

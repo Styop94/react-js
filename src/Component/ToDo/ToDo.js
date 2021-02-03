@@ -1,49 +1,29 @@
-import { Component } from "react";
-import idGenerator from './helpers/idGenerator';
+import React, { Component } from "react";
 // import styles from './Todo.module.css';  
 import { Button, Col, Container, Row } from "react-bootstrap";
-import Task from './Task/Task';
-import NewTask from './NewTask/NewTask';
+import Task from '../Task/Task';
+import NewTask from '../NewTask/NewTask';
+import Confirm from '../Confirm/Confirm';
 
 class ToDo extends Component {
-    constructor() {
-        super();
-        this.state = {
-            inputValue: "",
-            tasks: [],
-            selecktedTask: new Set(),
-            // checked: false,
-        }
+    state = {
+        tasks: [],
+        selecktedTask: new Set(),
+        showConfirm: false,
     }
 
-    handeleChange = (event) => {
-        this.setState({
-            inputValue: event.target.value,
-        })
-    }
+    addTask = (newTask) => {
 
-    AddText = () => {
-        const inputValue = this.state.inputValue.trim();
-        if (!inputValue) {
-            return;
-        }
-
-        const newElement = {
-            id: idGenerator(),
-            title: inputValue,
-        }
-
-        const tasks = [...this.state.tasks, newElement];
+        const tasks = [...this.state.tasks, newTask];
 
         this.setState({
-            tasks,
-            inputValue: '',
-        })
-    }
+            tasks
+        });
+    };
 
     delTask = (taskId) => {
-        let fil = this.state.tasks.filter((filterTask) => {
-            return filterTask.id !== taskId
+        const newTasks = this.state.tasks.filter((task) => {
+            return task.id !== taskId
         });
         // Delete taskId for id
 
@@ -53,18 +33,18 @@ class ToDo extends Component {
         // }
 
         this.setState({
-            tasks: fil,
+            tasks: newTasks,
             // selecktedTask: selecktedTask,
         });
     }
 
-    toggleTask = (element) => {
+    toggleTask = (taskId) => {
         const selecktedTask = new Set(this.state.selecktedTask);
-        if (selecktedTask.has(element)) {
-            selecktedTask.delete(element);
+        if (selecktedTask.has(taskId)) {
+            selecktedTask.delete(taskId);
         }
         else {
-            selecktedTask.add(element);
+            selecktedTask.add(taskId);
         }
 
         this.setState({
@@ -74,8 +54,9 @@ class ToDo extends Component {
 
     removeSelekted = () => {
         const { selecktedTask, tasks } = this.state;
-        const newTasks = tasks.filter((ele) => {
-            if (selecktedTask.has(ele.id)) {
+
+        const newTasks = tasks.filter((task) => {
+            if (selecktedTask.has(task.id)) {
                 return false;
             }
             else
@@ -85,37 +66,22 @@ class ToDo extends Component {
         this.setState({
             tasks: newTasks,
             selecktedTask: new Set(),
+            showConfirm: false, 
         })
     }
 
-    hendelKeyDown = (event) => {
-
-        if (event.key === "Enter") {
-            this.AddText();
-
-        }
+    toggleConfirm = () => {
+        this.setState({
+            showConfirm: !this.state.showConfirm, 
+        });
     }
 
-    // allChecked = (element) => {
-
-    //     const {selecktedTask} = this.state;
-    //     if(selecktedTask.has(element)) {
-    //         this.setState ({
-    //             checked : true,
-    //         })
-    //     }
-    //     else {
-    //         this.setState ({
-    //             checked : false,
-    //         })
-    //     }
-    // }
-
     render() {
-        const idGen = this.state.tasks.map((element) => {
-            return ( 
-                <Col key={element.id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                    <Task data={element}
+        const { tasks, selecktedTask, showConfirm } = this.state;
+        const idGen = tasks.map((task) => {
+            return (
+                <Col key={task.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                    <Task data={task}
                         onToggle={this.toggleTask}
                         disabled={!!this.state.selecktedTask.size}
                         delTaskProps={this.delTask} />
@@ -130,25 +96,33 @@ class ToDo extends Component {
                         <h2>Todo List</h2>
                         <Col>
                             <NewTask
-                                disabledProps={this.state.selecktedTask.size}
-                                valueProps={this.state.inputValue}
-                                disabledBtn={this.state.selecktedTask.size}
-                                onChangeProps={this.handeleChange}
-                                onKeyDownProps={this.hendelKeyDown}
-                                AddTextProps={this.AddText}
+                                onAdd={this.addTask}
+                                disabled={!!selecktedTask.size}
                             />
                         </Col>
                     </Row>
                     <Row className="justify-content-center">
-                        <Button variant="danger" disabled={!this.state.selecktedTask.size} onClick={this.removeSelekted}>DeLete Seleckted</Button>
+                        <Button variant="danger"
+                            disabled={!selecktedTask.size}
+                            onClick={this.toggleConfirm}
+                        >
+                            DeLete Seleckted
+                          </Button>
                              &nbsp;
-                            <Button variant="danger" onClick={this.allChecked}>All Checked</Button>
+                        <Button variant="danger" onClick={this.allChecked}>All Checked</Button>
                     </Row>
                     <br />
                     <Row>
                         {idGen}
                     </Row>
                 </Container>
+                { showConfirm &&
+                    <Confirm
+                        onClose={this.toggleConfirm}
+                        onConfirm={this.removeSelekted}
+                        count={selecktedTask.size}
+                    />
+                }
             </div>
         )
     }
