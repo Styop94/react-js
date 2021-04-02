@@ -4,12 +4,16 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import Task from '../Task/Task';
 import NewTask from '../NewTask/NewTask';
 import Confirm from '../Confirm/Confirm';
+import EditTaskModal from './../NewTask/EditTaskModal'
 
 class ToDo extends Component {
     state = {
         tasks: [],
-        selecktedTask: new Set(),
+        selectedTask: new Set(),
         showConfirm: false,
+        openNewTaskModal: false,
+        editTask: false,
+
     }
 
     addTask = (newTask) => {
@@ -17,46 +21,43 @@ class ToDo extends Component {
         const tasks = [...this.state.tasks, newTask];
 
         this.setState({
-            tasks
+            tasks,
+            openNewTaskModal: false,
+            edited: newTask,
         });
     };
+
 
     delTask = (taskId) => {
         const newTasks = this.state.tasks.filter((task) => {
             return task.id !== taskId
         });
-        // Delete taskId for id
-
-        // const selecktedTask = this.state.selecktedTask;  
-        // if (selecktedTask.has(taskId)) {
-        //     selecktedTask.delete(taskId);
-        // }
 
         this.setState({
             tasks: newTasks,
-            // selecktedTask: selecktedTask,
         });
-    }
+    };
 
     toggleTask = (taskId) => {
-        const selecktedTask = new Set(this.state.selecktedTask);
-        if (selecktedTask.has(taskId)) {
-            selecktedTask.delete(taskId);
+        // const selectedTask = new Set(this.state.selectedTask);
+        const {selectedTask} = this.state
+        if (selectedTask.has(taskId)) {
+            selectedTask.delete(taskId);
         }
         else {
-            selecktedTask.add(taskId);
-        }
+            selectedTask.add(taskId);
+        };
 
         this.setState({
-            selecktedTask: selecktedTask,
-        })
-    }
+            selectedTask
+        });
+    };
 
     removeSelekted = () => {
-        const { selecktedTask, tasks } = this.state;
+        const { selectedTask, tasks } = this.state;
 
         const newTasks = tasks.filter((task) => {
-            if (selecktedTask.has(task.id)) {
+            if (selectedTask.has(task.id)) {
                 return false;
             }
             else
@@ -65,53 +66,110 @@ class ToDo extends Component {
 
         this.setState({
             tasks: newTasks,
-            selecktedTask: new Set(),
-            showConfirm: false, 
+            selectedTask: new Set(),
+            showConfirm: false,
         })
     }
-
+onClose = () => {
+    this.setState({
+        editTask:null
+    })
+}
     toggleConfirm = () => {
         this.setState({
-            showConfirm: !this.state.showConfirm, 
+            showConfirm: !this.state.showConfirm,
         });
+    };
+
+    handleEdit = (editTask) => {
+        this.setState({
+             editTask
+            })
     }
 
+
+    SelectALL = () => {
+        const taskIds = this.state.tasks.map((task) => task.id);
+        this.setState({
+            selectedTask: new Set(taskIds)
+        })
+    };
+
+    deSelectALL = () => {
+        this.setState({
+            selectedTask: new Set()
+        })
+    };
+
+    toggleNewTaskModal = () => {
+        this.setState({
+            openNewTaskModal: !this.state.openNewTaskModal
+        });
+    };
+     
+    onSave= (editedTask) => {
+         let tasks = [...this.state.tasks];
+         let num = tasks.findIndex((task)=>task.id === editedTask.id)  
+         tasks[num] = editedTask;
+         this.setState({
+             tasks
+         })
+    }
+
+
     render() {
-        const { tasks, selecktedTask, showConfirm } = this.state;
+        const { tasks, selectedTask, showConfirm, openNewTaskModal, editTask } = this.state;
         const idGen = tasks.map((task) => {
             return (
                 <Col key={task.id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                    <Task data={task}
-                        onToggle={this.toggleTask}
-                        disabled={!!this.state.selecktedTask.size}
-                        delTaskProps={this.delTask} />
+                    <Task task={task}
+                        toggleTask={this.toggleTask}
+                        disabled={!!this.state.selectedTask.size}
+                        delTask={this.delTask}
+                        selected={selectedTask.has(task.id)}
+                        handleEdit={this.handleEdit}
+                    />
                 </Col>
             )
-        })
+        });
 
         return (
             <div>
+                <h2>ToDo List</h2>
                 <Container>
                     <Row className="justify-content-center">
-                        <h2>Todo List</h2>
                         <Col>
-                            <NewTask
-                                onAdd={this.addTask}
-                                disabled={!!selecktedTask.size}
-                            />
+                            <Button variant="outline-secondary"
+                                onClick={this.toggleNewTaskModal}
+                            >
+                                Add New Task
+                     </Button>
+                        </Col>
+                        <Col>
+                            <Button variant="danger"
+                                disabled={!selectedTask.size}
+                                onClick={this.toggleConfirm}
+                            >
+                                DeLete Seleckted
+                          </Button>
+                        </Col>
+                        <Col>
+                            <Button variant="warning"
+                                onClick={this.SelectALL}
+                                disabled={tasks.length < 2 ? true : false}
+                            >
+                                Select ALL
+                             </Button>
+                        </Col>
+                        <Col>
+                            <Button variant="warning"
+                                onClick={this.deSelectALL}
+                                disabled={selectedTask.size < 2}
+                            >
+                                Deselect ALL
+                             </Button>
                         </Col>
                     </Row>
-                    <Row className="justify-content-center">
-                        <Button variant="danger"
-                            disabled={!selecktedTask.size}
-                            onClick={this.toggleConfirm}
-                        >
-                            DeLete Seleckted
-                          </Button>
-                         {/*    &nbsp;
-                         <Button variant="danger" onClick={this.allChecked}>All Checked</Button> */}
-                    </Row>
-                    <br />
                     <Row>
                         {idGen}
                     </Row>
@@ -120,13 +178,28 @@ class ToDo extends Component {
                     <Confirm
                         onClose={this.toggleConfirm}
                         onConfirm={this.removeSelekted}
-                        count={selecktedTask.size}
+                        count={selectedTask.size}
                     />
                 }
+                {openNewTaskModal &&
+                    <NewTask
+                        onClose={this.toggleNewTaskModal}
+                        addTask={this.addTask}
+                    />
+                }
+                {this.state.editTask && 
+                    <EditTaskModal 
+                    handleEdit={this.handleEdit}
+                    editTask={editTask} 
+                    onSave = {this.onSave}
+                    editTask ={this.state.editTask}
+                    onClose = {this.onClose}
+                    
+                    />}
             </div>
-        )
-    }
-}
+        );
+    };
+};
 
 export default ToDo;
 

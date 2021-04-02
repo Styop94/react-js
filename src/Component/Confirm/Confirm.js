@@ -21,12 +21,17 @@ function Confirm(props) {
             <Modal.Footer>
                 <Button onClick={props.onConfirm}
                     variant='danger'
-                >Delete</Button>
-                <Button onClick={props.onClose}>Cancel</Button>
+                >
+                    Delete
+                </Button>
+                <Button onClick={props.onClose}
+                >
+                    Cancel
+                </Button>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 Confirm.prototype = {
     onClose: PropTypes.func.isRequired,
     onConfirm: PropTypes.func.isRequired,

@@ -2,52 +2,50 @@ import React, { Component } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import styles from './taskStyles.module.css';
 import PropTypes from 'prop-types';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faEdit} from '@fortawesome/free-solid-svg-icons'
+
 
 class Task extends Component {
 
-
-
-    state = {
-        selected: false,
-    };
-
-    handelChange = () => {
-        const { onToggle, data } = this.props;
-        onToggle(data.id);
-        this.setState({
-            selected: !this.state.selected,
-        })
-    }
+    // handelChange = () => {
+    //     const {  data } = this.props;
+    //     onToggle(data.id);
+    // }
 
     render() {
-        const element = this.props.data;
-        const { disabled, delTaskProps } = this.props;
-        const { selected } = this.state;
+        const element = this.props.task;
+        const { disabled,toggleTask, delTask, selected, handleEdit,task } = this.props;
         return (
             <Card className={`${styles.task} ${selected ? styles.selected : ""}`}>
                 <Card.Body>
-                    <input type="checkbox"
-                        onChange={this.handelChange} />
-                    <Card.Title>{element.title}</Card.Title>
-                    <Card.Text></Card.Text>
+                    <input
+                        type="checkbox"
+                        // onChange={this.handelChange}
+                        onChange={()=>toggleTask(task.id)}
+
+                        checked={selected}
+                    />
+                    <Card.Title>{task.title}</Card.Title>
+                    <Card.Text>{task.description}</Card.Text>
                     <Button variant="danger"
                         disabled={disabled}
-                        onClick={() => { delTaskProps(element.id) }}>DeL
+                        onClick={() => { delTask(task.id) }}>DeL
                  </Button>
+                    <Button onClick={()=> handleEdit(task)} variant = 'success'>edit</Button>
                 </Card.Body>
             </Card>
-        )
-    }
-
-
-}
+        );
+    };
+};
 
 
 Task.propTypes = {
-    data: PropTypes.object.isRequired,
-    onToggle: PropTypes.func.isRequired,
-    delTaskProps: PropTypes.func.isRequired,
+    task: PropTypes.object.isRequired,
+    toggleTask: PropTypes.func.isRequired,
+    delTask: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
+    selected: PropTypes.bool.isRequired,
 }
 
 export default Task;
