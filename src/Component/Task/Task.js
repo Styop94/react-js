@@ -8,21 +8,15 @@ import PropTypes from 'prop-types';
 
 class Task extends Component {
 
-    // handelChange = () => {
-    //     const {  data } = this.props;
-    //     onToggle(data.id);
-    // }
-
     render() {
         const element = this.props.task;
-        const { disabled,toggleTask, delTask, selected, handleEdit,task } = this.props;
+        const { disabled, toggleTask, delTask, selected, handleEdit, task } = this.props;
         return (
             <Card className={`${styles.task} ${selected ? styles.selected : ""}`}>
                 <Card.Body>
                     <input
                         type="checkbox"
-                        // onChange={this.handelChange}
-                        onChange={()=>toggleTask(task.id)}
+                        onChange={() => toggleTask(task.id)}
 
                         checked={selected}
                     />
@@ -32,7 +26,7 @@ class Task extends Component {
                         disabled={disabled}
                         onClick={() => { delTask(task.id) }}>DeL
                  </Button>
-                    <Button onClick={()=> handleEdit(task)} variant = 'success'>edit</Button>
+                    <Button onClick={() => handleEdit(task)} variant='success'>edit</Button>
                 </Card.Body>
             </Card>
         );

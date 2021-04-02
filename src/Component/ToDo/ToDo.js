@@ -40,7 +40,7 @@ class ToDo extends Component {
 
     toggleTask = (taskId) => {
         // const selectedTask = new Set(this.state.selectedTask);
-        const {selectedTask} = this.state
+        const { selectedTask } = this.state
         if (selectedTask.has(taskId)) {
             selectedTask.delete(taskId);
         }
@@ -70,11 +70,11 @@ class ToDo extends Component {
             showConfirm: false,
         })
     }
-onClose = () => {
-    this.setState({
-        editTask:null
-    })
-}
+    onClose = () => {
+        this.setState({
+            editTask: null
+        })
+    }
     toggleConfirm = () => {
         this.setState({
             showConfirm: !this.state.showConfirm,
@@ -83,8 +83,8 @@ onClose = () => {
 
     handleEdit = (editTask) => {
         this.setState({
-             editTask
-            })
+            editTask
+        })
     }
 
 
@@ -106,14 +106,14 @@ onClose = () => {
             openNewTaskModal: !this.state.openNewTaskModal
         });
     };
-     
-    onSave= (editedTask) => {
-         let tasks = [...this.state.tasks];
-         let num = tasks.findIndex((task)=>task.id === editedTask.id)  
-         tasks[num] = editedTask;
-         this.setState({
-             tasks
-         })
+
+    onSave = (editedTask) => {
+        let tasks = [...this.state.tasks];
+        let num = tasks.findIndex((task) => task.id === editedTask.id)
+        tasks[num] = editedTask;
+        this.setState({
+            tasks
+        })
     }
 
 
@@ -187,14 +187,14 @@ onClose = () => {
                         addTask={this.addTask}
                     />
                 }
-                {this.state.editTask && 
-                    <EditTaskModal 
-                    handleEdit={this.handleEdit}
-                    editTask={editTask} 
-                    onSave = {this.onSave}
-                    editTask ={this.state.editTask}
-                    onClose = {this.onClose}
-                    
+                {this.state.editTask &&
+                    <EditTaskModal
+                        handleEdit={this.handleEdit}
+                        editTask={editTask}
+                        onSave={this.onSave}
+                        editTask={this.state.editTask}
+                        onClose={this.onClose}
+
                     />}
             </div>
         );
