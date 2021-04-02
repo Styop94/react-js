@@ -8,8 +8,6 @@ class EditTaskModal extends React.Component {
         description: '',
     };
     constructor(props) {
-        console.log(props)
-
         super(props);
         this.state = {
             ...props.editTask
